@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tareas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .circle-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .circle-completed {
+            background-color: #28a745;
+            color: white;
+        }
+        .circle-pending {
+            background-color: #adb5bd;
+            color: white;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <h1 class="mb-4 text-center">📝 Lista de Tareas</h1>
+    <div class="text-end mb-3">
+        <a href="{{ url_for('add_task') }}" class="btn btn-primary">➕ Nueva Tarea</a>
+    </div>
+
+    {% for task in tasks %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="card-title mb-0">{{ task.title }}</h5>
+                <a href="{{ url_for('toggle_task', task_id=task.id) }}"
+                   class="circle-icon {% if task.completed %}circle-completed{% else %}circle-pending{% endif %}"
+                   title="Cambiar estado de la tarea">
+                    <i class="bi bi-check-lg"></i>
+                </a>
+            </div>
+            <h6 class="card-subtitle mb-2 text-muted">
+    {{ task.date or "Sin fecha definida" }} {{ task.time or "" }}
+</h6>
+            <p class="card-text">{{ task.description }}</p>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn btn-outline-primary btn-sm">
+                    Editar
+                </a>
+                <a href="{{ url_for('delete_task', task_id=task.id) }}" class="btn btn-outline-danger btn-sm">
+                    Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <p class="text-muted text-center">No hay tareas aún. ¡Agrega una nueva!</p>
+    {% endfor %}
+</div>
+
+<!-- TOAST centrado arriba -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="position-fixed top-0 start-50 translate-middle-x z-3 p-3" style="min-width: 250px;">
+      {% for category, message in messages %}
+      <div class="toast align-items-center text-white bg-{{ 'success' if category == 'success' else 'secondary' }} border-0"
+           role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ message }}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        toastElList.forEach(toastEl => {
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    });
+</script>
+</body>
+</html>
