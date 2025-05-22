@@ -32,14 +32,14 @@ Permite crear, editar, listar y gestionar tareas con título, descripción, fech
 
 ---
 ## Estructura del proyecto
-
+```
 ├── app.py # Archivo principal con la lógica de Flask
 ├── requirements.txt # Archivo con las dependencias del proyecto
 ├── todo.db # Base de datos SQLite (se crea automáticamente)
 └── templates/ # Carpeta que contiene las plantillas HTML
 ├── index.html # Vista principal que lista las tareas
 └── form.html # Formulario para agregar o editar tareas
-
+```
 ---
 
 
